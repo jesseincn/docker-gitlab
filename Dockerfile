@@ -44,7 +44,7 @@ RUN set -ex && \
  && set -ex \
  && apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
-      sudo supervisor logrotate locales curl \
+      tini sudo supervisor logrotate locales curl \
       nginx openssh-server postgresql-client-12 postgresql-contrib-12 redis-tools \
       git-core ruby${RUBY_VERSION} python3 python3-docutils nodejs yarn gettext-base graphicsmagick \
       libpq5 zlib1g libyaml-0-2 libssl1.1 \
@@ -82,5 +82,5 @@ EXPOSE 22/tcp 80/tcp 443/tcp
 
 VOLUME ["${GITLAB_DATA_DIR}", "${GITLAB_LOG_DIR}","${GITLAB_HOME}/gitlab/node_modules"]
 WORKDIR ${GITLAB_INSTALL_DIR}
-ENTRYPOINT ["/sbin/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/sbin/entrypoint.sh"]
 CMD ["app:start"]
